@@ -1,0 +1,56 @@
+[gd_scene load_steps=3 format=3 uid="uid://bqkttosvkmumh"]
+
+[ext_resource type="PackedScene" uid="uid://4oiqc5etf51h" path="res://scenes/normal_pig.tscn" id="1_ggrxx"]
+
+[sub_resource type="GDScript" id="GDScript_ggrxx"]
+resource_name = "ranged_pig"
+script/source = "extends NormalPig
+
+@onready var projectile_scene:PackedScene=preload(\"res://scenes/pig_projectile.tscn\")
+@onready var timer: Timer = $Timer
+
+var projectile_speed:int =500
+# Called when the node enters the scene tree for the first time.
+func _ready() -> void:
+	super._ready()
+	speed*=0.5;
+	min_range=150
+	pass # Replace with function body.
+
+func shoot() ->void:
+	var distance = global_position.distance_to(king.global_position)
+	if distance<=min_range:
+		print(\"shoot\")
+		timer.start(2)
+		shoot_func()
+
+func shoot_func()->void:
+	var projectile = projectile_scene.instantiate()
+	get_parent().add_child(projectile)
+	
+	# Position projectile at spawn point
+	projectile.global_position = global_position
+	
+	# Calculate direction to player
+	var direction = (king.global_position - projectile.global_position).normalized()
+	
+	# Set projectile properties
+	if projectile.has_method(\"initialize\"):
+		projectile.initialize(direction, projectile_speed)
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta: float) -> void:
+	super._physics_process(delta)
+	
+	
+		
+	pass
+"
+
+[node name="ranged_pig" instance=ExtResource("1_ggrxx")]
+script = SubResource("GDScript_ggrxx")
+
+[node name="Timer" type="Timer" parent="." index="4"]
+wait_time = 2.0
+autostart = true
+
+[connection signal="timeout" from="Timer" to="." method="shoot"]

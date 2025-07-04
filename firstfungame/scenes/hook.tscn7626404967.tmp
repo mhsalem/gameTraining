@@ -1,0 +1,26 @@
+[gd_scene load_steps=4 format=3 uid="uid://b2bbqwp43gayu"]
+
+[ext_resource type="Script" uid="uid://cp7t7bimjptd5" path="res://scripts/hook.gd" id="1_lmb2r"]
+[ext_resource type="Texture2D" uid="uid://bbnh0irsh2whn" path="res://assets/Sprites/hookHead.png" id="1_p5w6b"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_lmb2r"]
+size = Vector2(30.9997, 11.9341)
+
+[node name="hook" type="Node2D"]
+script = ExtResource("1_lmb2r")
+
+[node name="Line2D" type="Line2D" parent="."]
+texture_mode = 1
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+rotation = 1.55412
+texture = ExtResource("1_p5w6b")
+
+[node name="hitbox" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="hitbox"]
+position = Vector2(-2.96926, -5.50014)
+rotation = 1.56641
+shape = SubResource("RectangleShape2D_lmb2r")
+
+[connection signal="body_entered" from="hitbox" to="." method="_on_Hitbox_body_entered"]

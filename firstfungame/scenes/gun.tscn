@@ -1,0 +1,63 @@
+[gd_scene load_steps=10 format=3 uid="uid://ckoeicn3klu47"]
+
+[ext_resource type="Script" uid="uid://bcgal10mcukjp" path="res://scripts/gun.gd" id="1_og67c"]
+[ext_resource type="Texture2D" uid="uid://c3u7semoksdn8" path="res://assets/Sprites/batgun2.png" id="2_og67c"]
+[ext_resource type="Texture2D" uid="uid://dxtl0q71d5qr0" path="res://assets/Sprites/smoke.png" id="3_gp1hk"]
+[ext_resource type="Texture2D" uid="uid://dfgolymqju4dk" path="res://assets/Sprites/smokeCone.png" id="4_qd4js"]
+
+[sub_resource type="Curve" id="Curve_qd4js"]
+_limits = [-360.0, 360.0, 0.0, 1.0]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_adabf"]
+width = 164
+curve = SubResource("Curve_qd4js")
+
+[sub_resource type="Gradient" id="Gradient_6b133"]
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_a5wyd"]
+gradient = SubResource("Gradient_6b133")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_haq8l"]
+particle_flag_disable_z = true
+emission_shape_offset = Vector3(1, 0, 0)
+angle_min = 1.07288e-05
+angle_max = 160.0
+angle_curve = SubResource("CurveTexture_adabf")
+spread = 160.0
+initial_velocity_max = 150.0
+gravity = Vector3(0, 98, 0)
+color = Color(1, 0.533333, 0, 0.462745)
+color_ramp = SubResource("GradientTexture1D_a5wyd")
+
+[node name="gun" type="Node2D"]
+script = ExtResource("1_og67c")
+
+[node name="BarrelPivot" type="Node2D" parent="."]
+
+[node name="Sprite2D" type="Sprite2D" parent="BarrelPivot"]
+position = Vector2(2, -1)
+texture = ExtResource("2_og67c")
+
+[node name="MuzzlePoint" type="Marker2D" parent="BarrelPivot"]
+position = Vector2(19, -1)
+
+[node name="GPUParticles2D2" type="GPUParticles2D" parent="BarrelPivot/MuzzlePoint"]
+position = Vector2(1, 0)
+emitting = false
+amount = 100
+texture = ExtResource("3_gp1hk")
+one_shot = true
+process_material = SubResource("ParticleProcessMaterial_haq8l")
+
+[node name="Sprite2D2" type="Sprite2D" parent="BarrelPivot"]
+visible = false
+texture = ExtResource("4_qd4js")
+centered = false
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 0.5
+one_shot = true
+
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

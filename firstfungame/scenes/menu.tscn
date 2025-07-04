@@ -1,0 +1,32 @@
+[gd_scene load_steps=3 format=3 uid="uid://7bn3s34aylu0"]
+
+[ext_resource type="Script" uid="uid://dedbtvsohil3x" path="res://scripts/menu.gd" id="1_vjb58"]
+[ext_resource type="Texture2D" uid="uid://bh03nq870i2yp" path="res://assets/Sprites/Kings and Pigs.png" id="1_yqeox"]
+
+[node name="menu" type="Node2D"]
+process_mode = 3
+script = ExtResource("1_vjb58")
+
+[node name="TextureRect" type="TextureRect" parent="."]
+offset_left = -139.0
+offset_top = -125.0
+offset_right = 142.0
+offset_bottom = -71.0
+texture = ExtResource("1_yqeox")
+
+[node name="start" type="Button" parent="."]
+offset_left = -105.0
+offset_top = -35.0
+offset_right = 103.0
+offset_bottom = 19.0
+text = "Start
+"
+
+[node name="resume" type="Button" parent="."]
+offset_left = -104.0
+offset_top = 32.0
+offset_right = 104.0
+offset_bottom = 91.0
+text = "Resume"
+
+[connection signal="pressed" from="resume" to="." method="_on_btn_resume_pressed"]
