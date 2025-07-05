@@ -1169,7 +1169,7 @@ script = ExtResource("1_lbhrr")
 position = Vector2(103, -33)
 
 [node name="pigSpawner" type="Timer" parent="."]
-wait_time = 1.985
+wait_time = 4.0
 autostart = true
 
 [node name="king" parent="." instance=ExtResource("1_uwrxv")]

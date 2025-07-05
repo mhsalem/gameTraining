@@ -32,7 +32,7 @@ func _on_lifetime_timer_timeout():
 
 
 func _on_area_2d_body_entered(body: Node2D) -> void:
-	#if body.is_in_group("player"):
-		#body.take_damage(damage)
-		#queue_free()
+	if body.is_in_group("player"):
+		body.take_damage(damage)
+		queue_free()
 	pass # Replace with function body.

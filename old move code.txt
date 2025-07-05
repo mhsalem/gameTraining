@@ -1,0 +1,128 @@
+extends CharacterBody2D
+
+# Movement parameters
+const MAX_SPEED       = 200.0
+const ROLL_MULTIPLIER = 3.0
+
+# Animation modes
+enum MovementMode { DIRECTIONAL, ROTATIONAL }
+@export var movement_mode: MovementMode = MovementMode.DIRECTIONAL
+@onready var rollCoolDown: Timer = $rollCoolDown
+@onready var immunity_frames: Timer = $immunityFrames
+
+# Nodes
+@onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
+@export var BombScene: PackedScene   = preload("res://scenes/Bomb.tscn")
+@export var throw_offset: float      = 2.0
+var rollCoolDownTime=2;
+var can_roll=true
+# State flags
+var is_attacking: bool = false
+var is_rolling:   bool = false
+@export var max_health: int = 100
+var health: int = max_health
+@export var damage_immunity_time: float = 1.0  # seconds of invulnerability
+var can_be_damaged: bool = true
+
+func _ready() -> void:
+	# Connect once; AnimatedSprite2D.animation_finished sends no args in Godot 4
+	sprite.animation_finished.connect(_on_animation_finished)
+
+func _physics_process(delta: float) -> void:
+	# 1) Handle bomb + attack input (only if free)
+	if not is_attacking and not is_rolling:
+		if Input.is_action_just_pressed("bomb"):
+			_throw_bomb()
+		elif Input.is_action_just_pressed("attack"):
+			# Immediately zero velocity, set flag, play animation
+			is_attacking = true
+			velocity = Vector2.ZERO
+			sprite.play("attack")
+			# we return to let the attack animation play
+			move_and_slide()
+			return
+
+	# 2) If mid-attack or mid-roll, just slide & skip input/movement
+	if is_attacking or is_rolling:
+		move_and_slide()
+		return
+
+	# 3) Normal movement + rolling
+	var input_vec = Vector2(
+		Input.get_axis("left","right"),
+		Input.get_axis("up",  "down")
+	)
+	if input_vec.length() > 0:
+		input_vec = input_vec.normalized()
+		velocity = input_vec * MAX_SPEED
+
+		if Input.is_action_just_pressed("roll")&&can_roll:
+			rollCoolDown.start(rollCoolDownTime);
+			can_roll=false
+			is_rolling = true
+			velocity *= ROLL_MULTIPLIER
+			sprite.play("roll")
+			
+		else:
+			sprite.play("running")
+	else:
+		velocity = Vector2.ZERO
+		sprite.play("idle")
+
+	# 4) Sprite flip
+	if input_vec.x < 0:
+		sprite.flip_h = true
+	elif input_vec.x > 0:
+		sprite.flip_h = false
+
+	move_and_slide()
+
+func _on_animation_finished() -> void:
+	var anim = sprite.animation
+
+	if anim == "roll":
+		# Roll ended
+		is_rolling = false
+		velocity = Vector2.ZERO
+
+	elif anim == "attack":
+		# Attack ended
+		is_attacking = false
+		# velocity is already zero
+
+	# Pick the correct follow‑up animation
+	if not is_attacking and not is_rolling:
+		if velocity.length() > 0:
+			sprite.play("running")
+		else:
+			sprite.play("idle")
+
+func _throw_bomb() -> void:
+	var bomb = BombScene.instantiate()
+	bomb.owner_node      = self
+	var dir              = (get_global_mouse_position() - global_position).normalized()
+	bomb.global_position = global_position + dir * throw_offset
+	bomb.velocity        = dir * bomb.speed
+	get_tree().current_scene.add_child(bomb)
+
+
+func _on_roll_cool_down_timeout() -> void:
+	can_roll=true;
+	pass # Replace with function body.
+
+
+func _on_area_2d_body_entered(body: Node2D) -> void:
+	print(health)
+	print("damage" in body)
+	if "damage" in body&&can_be_damaged:
+		can_be_damaged=false;
+		immunity_frames.start(damage_immunity_time);
+		sprite.play("hit")
+		health-=body.damage
+	pass # Replace with function body.
+
+
+func _on_immunity_frames_timeout() -> void:
+	can_be_damaged=true
+	sprite.play("idle")
+	pass # Replace with function body.

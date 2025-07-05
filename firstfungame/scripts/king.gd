@@ -179,24 +179,28 @@ func _throw_bomb() -> void:
 func _on_roll_cool_down_timeout() -> void:
 	can_roll = true
 
-# === DAMAGE HANDLER ===
-func _on_hurt_box_body_entered(body: Node2D) -> void:
-	
-	print("body")
-	if "damage" in body and can_be_damaged:
+func take_damage (dmg:int)->void:
+	health-=dmg;
+	if can_be_damaged:
 		can_be_damaged = false
 		is_attacking = false
-		health -= body.damage
+		take_damage(dmg)
+		
+		health -= dmg
 		if health <= 0:
 			die()
 			
-
 
 		flash_sprite()
 
 		#await get_tree().create_timer(hit_freeze_time).timeout
 		if immunity_frames.time_left<=0:
 			start_immunity(2)
+# === DAMAGE HANDLER ===
+#func _on_hurt_box_body_entered(body: Node2D) -> void:
+	#
+	#print("body")
+	#
 
 # === FLASH EFFECT ===
 func flash_sprite():

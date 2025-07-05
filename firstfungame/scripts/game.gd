@@ -26,7 +26,7 @@ func _process(_delta: float) -> void:
 func _on_timer_timeout() -> void:
 	var pig = pigScene.instantiate()
 	var fPig=fastPig.instantiate()
-	#pig.global_position = king.global_position + Vector2(randi_range(20, 222), randi_range(20, 222))
+	pig.global_position = king.global_position + Vector2(randi_range(20, 222), randi_range(20, 222))
 	fPig.global_position = king.global_position + Vector2(randi_range(20, 222), randi_range(20, 222))
-	#get_parent().add_child(pig)
+	get_parent().add_child(pig)
 	get_parent().add_child(fPig)

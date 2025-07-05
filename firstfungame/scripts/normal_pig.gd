@@ -94,3 +94,9 @@ func apply_knockback(knock_vec: Vector2) -> void:
 	else:
 		velocity.y *= -knock_vec.y
 	knock_timer = 0.2
+
+
+func _on_area_2d_body_entered(body: Node2D) -> void:
+	if body.is_in_group("player"):
+		body.take_damage(damage)
+	pass # Replace with function body.

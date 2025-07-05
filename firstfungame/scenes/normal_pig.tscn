@@ -272,3 +272,5 @@ shape = SubResource("RectangleShape2D_c8abh")
 
 [node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
 target_desired_distance = 4.9
+
+[connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]
