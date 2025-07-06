@@ -27,6 +27,9 @@ var hookRange :int =600
 
 @onready var  hook_scene:PackedScene=preload("res://scenes/hook.tscn");
 @onready var hook_timer: Timer = $hookTimer
+#@onready var skill_tree_ui: CanvasLayer = $SkillTreeUI
+#@onready var skill_tree_ui: CanvasLayer = $StaticSkillTree
+@onready var skill_tree_ui: CanvasLayer = $Node2D/StaticSkillTree
 
 # === STATE VARIABLES ===
 var health: int = max_health
@@ -86,6 +89,9 @@ func perform_hook()->void:
 	
 # === PHYSICS ===
 func _physics_process(_delta: float) -> void:
+	if Input.is_action_pressed("skill_tree"):
+		skill_tree_ui.visible = true
+		get_tree().paused = true
 	if is_attacking:
 		sprite.play("attack")
 	elif is_rolling:

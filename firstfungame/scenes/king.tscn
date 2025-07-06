@@ -1,4 +1,4 @@
-[gd_scene load_steps=45 format=3 uid="uid://yxfnkrjjlpgo"]
+[gd_scene load_steps=46 format=3 uid="uid://yxfnkrjjlpgo"]
 
 [ext_resource type="Texture2D" uid="uid://d0p36l6s5cjkf" path="res://assets/Sprites/01-King Human/Attack (78x58).png" id="1_gmgs4"]
 [ext_resource type="Script" uid="uid://dciojy27dwd0o" path="res://scripts/king.gd" id="1_h63cl"]
@@ -8,6 +8,7 @@
 [ext_resource type="Texture2D" uid="uid://dcb8as1o8v10s" path="res://assets/Sprites/01-King Human/Door Out (78x58).png" id="4_y26ih"]
 [ext_resource type="Texture2D" uid="uid://dnvya22vu3l0" path="res://assets/Sprites/01-King Human/Door In (78x58).png" id="5_6iuwv"]
 [ext_resource type="PackedScene" uid="uid://ckoeicn3klu47" path="res://scenes/gun.tscn" id="8_6440l"]
+[ext_resource type="PackedScene" uid="uid://woqw10jw5ejw" path="res://scenes/static_skill_tree.tscn" id="9_cojbw"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_6iuwv"]
 atlas = ExtResource("1_gmgs4")
@@ -314,6 +315,11 @@ scale = Vector2(0.75, 0.75)
 [node name="hookTimer" type="Timer" parent="."]
 wait_time = 2.0
 one_shot = true
+
+[node name="Node2D" type="Node2D" parent="."]
+
+[node name="StaticSkillTree" parent="Node2D" instance=ExtResource("9_cojbw")]
+visible = false
 
 [connection signal="animation_finished" from="AnimatedSprite2D" to="." method="_on_animation_finished"]
 [connection signal="body_entered" from="Area2D" to="." method="_on_hurt_box_body_entered"]

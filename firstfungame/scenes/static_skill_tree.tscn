@@ -1,0 +1,94 @@
+[gd_scene load_steps=5 format=3 uid="uid://woqw10jw5ejw"]
+
+[ext_resource type="Script" uid="uid://lyj5k3mmxpff" path="res://scripts/static_skill_tree.gd" id="1_5g7br"]
+[ext_resource type="PackedScene" uid="uid://hiyx005iw1es" path="res://scenes/skill_node.tscn" id="3_d4qbf"]
+[ext_resource type="Script" uid="uid://cd476btixk7pl" path="res://scripts/connection_drawer.gd" id="3_jyed6"]
+[ext_resource type="Script" uid="uid://b168phuapjeqk" path="res://scripts/skill_node1.gd" id="4_rmrgp"]
+
+[node name="SkillTreeUI" type="CanvasLayer"]
+script = ExtResource("1_5g7br")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 9.0
+offset_right = 9.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.913725, 0, 0.286275, 0.431373)
+
+[node name="MainContainer" type="VBoxContainer" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -564.0
+offset_top = -323.0
+offset_right = 578.0
+offset_bottom = 319.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="CloseButton" type="Button" parent="MainContainer"]
+layout_mode = 2
+text = "X"
+
+[node name="Header" type="HBoxContainer" parent="MainContainer"]
+layout_mode = 2
+
+[node name="skillTreeLabel" type="Label" parent="MainContainer/Header"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Arbor Arteria"
+
+[node name="PointsLabel" type="Label" parent="MainContainer/Header"]
+layout_mode = 2
+text = "0"
+
+[node name="SkillsContainer" type="Control" parent="MainContainer"]
+layout_mode = 2
+
+[node name="SkillCenter" type="Node2D" parent="MainContainer/SkillsContainer"]
+position = Vector2(202, 89)
+
+[node name="ConnectionDrawer" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("3_jyed6")
+
+[node name="skillNode" parent="." instance=ExtResource("3_d4qbf")]
+position = Vector2(591, 401)
+script = ExtResource("4_rmrgp")
+
+[node name="skillNode2" parent="skillNode" instance=ExtResource("3_d4qbf")]
+position = Vector2(73, -89)
+
+[node name="skillNode5" parent="skillNode/skillNode2" instance=ExtResource("3_d4qbf")]
+position = Vector2(54, -86)
+
+[node name="Line2D" type="Line2D" parent="skillNode/skillNode2"]
+points = PackedVector2Array(-2, -1, 54, -86)
+default_color = Color(0.380392, 0.380392, 0, 1)
+
+[node name="skillNode3" parent="skillNode" instance=ExtResource("3_d4qbf")]
+position = Vector2(-69, -94)
+
+[node name="skillNode4" parent="skillNode/skillNode3" instance=ExtResource("3_d4qbf")]
+position = Vector2(-59, -70)
+
+[node name="Line2D" type="Line2D" parent="skillNode/skillNode3"]
+points = PackedVector2Array(1, 1, -62, -73)
+default_color = Color(0.380392, 0.380392, 0, 1)
+
+[node name="Line2D" type="Line2D" parent="skillNode"]
+points = PackedVector2Array(2, -1, 72, -88)
+default_color = Color(0.380176, 0.380176, 0, 1)
+
+[node name="Line2D2" type="Line2D" parent="skillNode"]
+position = Vector2(0, -2)
+points = PackedVector2Array(0, 0, -69, -96)
+default_color = Color(0.380392, 0.380392, 0, 1)

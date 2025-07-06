@@ -2,7 +2,7 @@ extends Node2D
 
 # === Exported & Onready ===
 @export var cone_angle_deg: float     = 80.0
-@export var cone_range: float         = 160.0
+@export var cone_range: float         = 200.0
 @export var knockback_strength: float = 2.0
 @export var fire_cooldown: float      = 1.0
 @onready var timer: Timer            = $Timer
@@ -24,6 +24,21 @@ var _debug_pts      : PackedVector2Array = PackedVector2Array()
 const DEBUG_DURATION = 0.2
 const STEPS          = 16
 const EPSILON        = 0.05
+
+func  _ready() -> void:
+	
+	var s = smoke_sprite
+	
+	var length = get_cone_range()
+	var width = 2.0 * length * tan(deg_to_rad(get_cone_angle() * 0.5))
+	
+	# Get texture dimensions
+	var tex_width = s.texture.get_width()+20
+	var tex_height = s.texture.get_height()+20
+	
+	# Set scale
+	s.scale.x = length / tex_width
+	s.scale.y = width / tex_height
 
 func get_cone_angle() -> float:
 	return cone_angle_deg + cone_angle_bonus
@@ -59,17 +74,36 @@ func _process(delta: float) -> void:
 func _spawn_smoke() -> void:
 	var s = smoke_sprite
 	s.visible = true
-
+	
+	# Calculate cone dimensions
 	var length = get_cone_range()
-	var width  = 2.0 * length * tan(deg_to_rad(get_cone_angle() * 0.5))
-
-	s.scale.x = length / s.texture.get_width()
-	s.scale.y = width  / s.texture.get_height()
-
-	s.global_position = muzzle.global_position
+	var width = 2.0 * length * tan(deg_to_rad(get_cone_angle() * 0.5))
+	
+	# Get texture dimensions
+	var tex_width = s.texture.get_width()+20
+	var tex_height = s.texture.get_height()+20
+	
+	# Set scale
+	s.scale.x = length / tex_width
+	s.scale.y = width / tex_height
+	
+	# FIX 1: Move origin to base of cone (left-center)
+	#s.centered = false
+	#as.offset = Vector2(0, tex_height / 2)
+	
+	# FIX 2: Position at barrel with proper alignment
+	var forward = Vector2.RIGHT.rotated(barrel.global_rotation)
+	s.global_position = barrel.global_position - forward * (tex_width * s.scale.x) / 2
+	
+	# FIX 3: Set rotation to match barrel direction
 	s.global_rotation = barrel.global_rotation
-
-
+	
+	# FIX 4: Make independent of player rotation
+	var world_pos = s.global_position
+	var world_rot = s.global_rotation
+	s.reparent(get_tree().root, true)
+	s.global_position = world_pos
+	s.global_rotation = world_rot
 
 func _shoot_cone() -> void:
 	# start timer to clear debug cone
