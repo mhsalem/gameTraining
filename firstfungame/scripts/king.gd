@@ -1,12 +1,14 @@
 extends CharacterBody2D
 
 # === CONSTANTS ===
-const MAX_SPEED = 200.0
+const MAX_SPEED = 300.0
 const ROLL_MULTIPLIER = 2.5
 # === ENUM ===
 enum MovementMode { DIRECTIONAL, ROTATIONAL }
 
 # === EXPORTED VARIABLES ===
+@export var acceleration := 400.0
+@export var deceleration := 900.0
 @export var movement_mode: MovementMode = MovementMode.DIRECTIONAL
 @export var BombScene: PackedScene = preload("res://scenes/Bomb.tscn")
 @export var throw_offset: float = 2.0
@@ -129,7 +131,8 @@ func _physics_process(_delta: float) -> void:
 	if input_vec.length() > 0 && hook==null:
 		is_running=true
 		input_vec = input_vec.normalized()
-		velocity = input_vec * MAX_SPEED
+		var target_velocity = input_vec * MAX_SPEED
+		velocity = velocity.move_toward(target_velocity, acceleration * _delta)
 
 		if Input.is_action_just_pressed("roll") and can_roll:
 			rollCoolDown.start(2.0)
@@ -141,9 +144,15 @@ func _physics_process(_delta: float) -> void:
 			is_running=false
 		
 	
-	else:
-		velocity = Vector2.ZERO
-		sprite.play("idle")
+	elif input_vec.length() <= 0:
+		is_running = false
+		velocity = velocity.move_toward(Vector2.ZERO, deceleration * _delta)
+
+		if velocity.length() < 5.0:
+			velocity = Vector2.ZERO
+			sprite.play("idle")
+		elif not is_rolling and not is_attacking:
+			sprite.play("running") 
 
 	if get_local_mouse_position().x<0:
 		sprite.flip_h = true
