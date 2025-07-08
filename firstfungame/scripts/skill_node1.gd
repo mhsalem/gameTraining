@@ -10,3 +10,7 @@ func apply_effect() -> void:
 	if player:
 		player.has_dash = true
 		print("Dash unlocked for player!")
+
+func _on_pressed() -> void:
+	if SkillTree.try_unlock_skill(self):
+		print("Unlocked: ", skill_name)

@@ -145,9 +145,9 @@ func _physics_process(_delta: float) -> void:
 		velocity = Vector2.ZERO
 		sprite.play("idle")
 
-	if input_vec.x < 0:
+	if get_local_mouse_position().x<0:
 		sprite.flip_h = true
-	elif input_vec.x > 0:
+	elif get_local_mouse_position().x>0:
 		sprite.flip_h = false
 
 

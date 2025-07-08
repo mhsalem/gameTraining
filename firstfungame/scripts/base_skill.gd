@@ -21,13 +21,16 @@ func _ready():
 	# Set up UI
 	#button.text = skill_name
 	cost_label.text = "Cost: " + str(skill_cost)
-	name_label.text = skill_name
+# base_skill.gd
+	await get_tree().process_frame
+	button = $Button
+	if button:
+		# Connect only if not already connected
+		if !button.pressed.is_connected(_on_pressed):
+			button.pressed.connect(_on_pressed)
 	
-	# Initial state
+	# Continue with other setup
 	update_appearance()
-	
-	# Connect button
-	button.pressed.connect(_on_pressed)
 # Base functionality - override this in child classes
 func apply_effect() -> void:
 	print("Applying base skill effect: ", skill_name)

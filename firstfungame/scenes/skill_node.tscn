@@ -1,8 +1,10 @@
-[gd_scene load_steps=2 format=3 uid="uid://hiyx005iw1es"]
+[gd_scene load_steps=3 format=3 uid="uid://hiyx005iw1es"]
 
+[ext_resource type="Script" uid="uid://l7ww05axko5e" path="res://scripts/base_skill.gd" id="1_42img"]
 [ext_resource type="Texture2D" uid="uid://dxtl0q71d5qr0" path="res://assets/Sprites/smoke.png" id="1_i1v2c"]
 
 [node name="skillNode" type="Node2D"]
+script = ExtResource("1_42img")
 
 [node name="TextureRect" type="TextureRect" parent="."]
 offset_left = -20.0
@@ -24,3 +26,5 @@ offset_bottom = 23.0
 [node name="CostLabel" type="Label" parent="."]
 offset_right = 40.0
 offset_bottom = 23.0
+
+[connection signal="pressed" from="Button" to="." method="_on_pressed"]
